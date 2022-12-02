@@ -53,7 +53,16 @@ public class Grid : MonoBehaviour
         {
             for(int y = 0; y < yDim; y++)
             {
-                GameObject background = Instantiate(backgroundPrefab, new Vector3(x, y, 0), Quaternion.identity);
+                float offset = 0;
+                if (y % 2 != 0)
+                {
+                    offset = 0.5f;
+                }
+                //float x = startpos.x + gridPos.x * hexWidth + offset;
+                //float z = startpos.z - gridPos.y * hexHeight * 0.75f;
+
+                //return new Vector3(x, 0, z);
+                GameObject background = Instantiate(backgroundPrefab, new Vector3(x + offset, y * 0.866f, 0), Quaternion.identity);
                 background.transform.parent = transform;
                 /*Transform hex = Instantiate(backgroundPrefab) as Transform;
                 Vector2 gridPos = new Vector2(x, y);

@@ -789,7 +789,7 @@ MonoBehaviour:
     prefab: {fileID: 4094479079422740869, guid: 2ad423e479b38c7428e266b7a38c0a86, type: 3}
   - type: 2
     prefab: {fileID: 5066122625907414865, guid: 7632411b152cbff42999f0781a5b0642, type: 3}
-  backgroundPrefab: {fileID: 813439885368958687, guid: 9cae3dc1375fa8f4cb85c86b87ace9bf, type: 3}
+  backgroundPrefab: {fileID: 275633487991726216, guid: 9cae3dc1375fa8f4cb85c86b87ace9bf, type: 3}
 --- !u!4 &789405174
 Transform:
   m_ObjectHideFlags: 0
