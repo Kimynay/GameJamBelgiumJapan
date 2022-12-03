@@ -16,7 +16,7 @@ public class MenuManager : MonoBehaviour
         if (returnToMenu)
         {
             returnToMenu = false;
-            SceneManager.LoadScene(01);
+            SceneManager.LoadScene(1);
             Canvas.SetActive(true);
         }
     }
@@ -33,11 +33,11 @@ public class MenuManager : MonoBehaviour
     public void WinGame()
     {
         Debug.Log("You Win !");
-        SceneManager.LoadScene(0);
+        SceneManager.LoadScene(1);
     }
     public void LooseGame()
     {
         Debug.Log("You Loosed !");
-        SceneManager.LoadScene(0);
+        SceneManager.LoadScene(1);
     }
 }
