@@ -19,8 +19,8 @@ public class Grid : MonoBehaviour
         public GameObject prefab;
     };
 
-    public int xDim;
-    public int yDim;
+    public int xDim = 5;
+    public int yDim = 5;
 
     public TrashPrefab[] trashPrefabs;
     public GameObject backgroundPrefab;
@@ -41,7 +41,7 @@ public class Grid : MonoBehaviour
             }
         }
 
-        for (int x = 0; x < xDim; x++)
+        /*for (int x = 0; x < xDim; x++)
         {
             for (int y = 0; y < yDim; y++)
             {
@@ -54,7 +54,7 @@ public class Grid : MonoBehaviour
                 GameObject background = Instantiate(backgroundPrefab, GetWorldPosition(x + offset, y * 0.866f), Quaternion.identity);
                 background.transform.parent = transform;
             }
-        }
+        }*/
 
         trashes = new GameTrash[xDim, yDim];
         for (int x = 0; x < xDim; x++)

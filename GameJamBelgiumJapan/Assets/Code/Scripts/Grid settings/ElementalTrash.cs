@@ -7,9 +7,12 @@ public class ElementalTrash : MonoBehaviour
     //Select the different elements of the trashes
     public enum ElementalType
     {
-        FIRE,
-        WATER,
-        EARTH,
+        FIRE_CIGARET,
+        FIRE_GASOIL,
+        WATER_BEER,
+        WATER_BOTTLE,
+        EARTH_BANANA,
+        EARTH_GARBAGE,
         ANY,
         COUNT,
     }
