@@ -1,10 +1,11 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.UI;
 
 public class EarthHealth : MonoBehaviour
 {
-    public SpriteRenderer spriteRenderer;
+    public Image image;
     public Sprite[] sprites;
 
     public enum State
@@ -28,15 +29,15 @@ public class EarthHealth : MonoBehaviour
         switch (state)
         {
             case State.Worst:
-                spriteRenderer.sprite = sprites[0];
+                image.sprite = sprites[0];
                 break;
 
             case State.Bad:
-                spriteRenderer.sprite = sprites[1];
+                image.sprite = sprites[1];
                 break;
                 
             case State.Good:
-                spriteRenderer.sprite = sprites[2];
+                image.sprite = sprites[2];
                 break;
         }
 

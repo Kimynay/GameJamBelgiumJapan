@@ -20,9 +20,7 @@ public class BarsBalanceSystem : MonoBehaviour
         {
             GameObject bar = Instantiate(bar_type[i]);
             bars[i] = bar.GetComponent<Slider>();
-            bars[i].transform.position = new Vector3(transform.position.x,
-                                                     (i - (float)bar_type.Length / 2 + 0.5f) * -width,
-                                                     transform.position.z);
+            bars[i].transform.position = new Vector3(0, (i - (float)bar_type.Length / 2 + 0.5f) * -width, transform.localPosition.z);
             bar.transform.SetParent(transform, false);
             bars[i].value = 60;
         }
