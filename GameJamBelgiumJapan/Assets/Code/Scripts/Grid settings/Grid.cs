@@ -34,6 +34,8 @@ public class Grid : MonoBehaviour
     void Start()
     {
 
+        trashPrefabs[1].prefab.transform.localScale = transform.localScale;
+
         trashPrefabDict = new Dictionary<TrashType, GameObject>();
         for (int i = 0; i < trashPrefabs.Length; i++)
         {
@@ -78,7 +80,8 @@ public class Grid : MonoBehaviour
             yield return new WaitForSeconds(fillTime);
         }
     }
-
+    //private float SpacingX = 1.0f;
+    //private float SpacingY = 2.0f;
     public bool FillStep()
     {
         bool movedTrash = false;
@@ -94,7 +97,7 @@ public class Grid : MonoBehaviour
                     {
                         Destroy(trashBelow.gameObject);
                         float offset = CalculateOffset(y);
-                        trash.MovableComponent.Move(x + offset, (y + 1) * 0.866f, fillTime);
+                        trash.MovableComponent.Move((x + offset)* transform.localScale.x, ((y + 1) * 0.866f)* transform.localScale.x, fillTime);
                         trashes[x, y + 1] = trash;
                         SpawnNewTrash(x, y, TrashType.EMPTY, offset);
                         movedTrash = true;
@@ -115,7 +118,7 @@ public class Grid : MonoBehaviour
 
                 trashes[x, 0] = newTrash.GetComponent<GameTrash>();
                 trashes[x, 0].Init(x, -1, this, TrashType.NORMAL);
-                trashes[x, 0].MovableComponent.Move(x + offset, 0 * 0.866f, fillTime);
+                trashes[x, 0].MovableComponent.Move((x + offset) * transform.localScale.x, (0 * 0.866f) * transform.localScale.x, fillTime);
                 trashes[x, 0].ElementalComponent.SetElement((ElementalTrash.ElementalType)UnityEngine.Random.Range(0, trashes[x, 0].ElementalComponent.NumElements));
                 movedTrash = true;
             }
@@ -127,7 +130,7 @@ public class Grid : MonoBehaviour
     public Vector2 GetWorldPosition(float x, float y)
     {
         //still have to try to change the Y position to place the grid in the center of the screen
-        return new Vector2(transform.position.x - xDim/2.0f + x, transform.position.y + yDim/3.0f - y);
+        return new Vector2(transform.position.x - (xDim * transform.localScale.x) / 2.0f + x, transform.position.y + (yDim * transform.localScale.x) / 3.0f - y);
     }
 
     public GameTrash SpawnNewTrash(int x, int y, TrashType type, float offset)
