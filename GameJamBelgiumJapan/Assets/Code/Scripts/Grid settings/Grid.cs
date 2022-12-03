@@ -31,6 +31,9 @@ public class Grid : MonoBehaviour
 
     private GameTrash[,] trashes;
 
+    private GameTrash pressedTrash;
+    private GameTrash previousTrash;
+
     void Start()
     {
 
@@ -80,8 +83,7 @@ public class Grid : MonoBehaviour
             yield return new WaitForSeconds(fillTime);
         }
     }
-    //private float SpacingX = 1.0f;
-    //private float SpacingY = 2.0f;
+
     public bool FillStep()
     {
         bool movedTrash = false;
@@ -153,5 +155,56 @@ public class Grid : MonoBehaviour
         }
 
         return offset;
+    }
+
+    public bool IsAdjacent(GameTrash t1, GameTrash t2)
+    {
+        Debug.Log(t1 + "-------------" + t2);
+        return ((t1.transform.position - t2.transform.position).magnitude <= transform.localScale.x + 0.05f);
+    }
+
+    public void SwapPieces(GameTrash t1, GameTrash t2)
+    {
+        if(t1.IsMovable() && t2.IsMovable())
+        {
+            /*trashes[(int)t1.X, (int)t1.Y] = t2;
+            trashes[(int)t2.X, (int)t2.Y] = t1;*/
+
+            float t1X = t1.X;
+            float t1Y = t1.Y;
+
+            t1.MovableComponent.Move(t2.X, t2.Y, fillTime);
+            t2.MovableComponent.Move(t1X, t1Y, fillTime);
+        }
+    }
+
+    public void PressTrash(GameTrash t)
+    {
+        Debug.Log(t.X + "::::::" + t.Y);
+        if (!pressedTrash)
+        {
+            pressedTrash = t;
+            return;
+        }
+        else if(IsAdjacent(pressedTrash, t))
+        {
+            SwapPieces(pressedTrash, t);
+            pressedTrash = null;
+            return;
+        }
+        pressedTrash = t;
+    }
+    public void EnterTrash(GameTrash t)
+    {
+        previousTrash = t;
+    }
+
+    public void ReleaseTrash()
+    {
+        if(IsAdjacent(pressedTrash, previousTrash))
+        {
+
+            SwapPieces(pressedTrash, previousTrash);
+        }
     }
 }

@@ -76,6 +76,21 @@ public class GameTrash : MonoBehaviour
         type = _type;
     }
 
+    private void OnMouseEnter()
+    {
+        grid.EnterTrash(this);
+    }
+
+    private void OnMouseDown()
+    {
+        grid.PressTrash(this);
+    }
+
+    private void OnMouseUp()
+    {
+        grid.ReleaseTrash();
+    }
+
     public bool IsMovable()
     {
         return movableComponent != null;
