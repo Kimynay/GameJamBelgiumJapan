@@ -86,11 +86,6 @@ public class GameTrash : MonoBehaviour
         grid.PressTrash(this);
     }
 
-    private void OnMouseUp()
-    {
-        grid.ReleaseTrash();
-    }
-
     public bool IsMovable()
     {
         return movableComponent != null;

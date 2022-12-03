@@ -159,7 +159,6 @@ public class Grid : MonoBehaviour
 
     public bool IsAdjacent(GameTrash t1, GameTrash t2)
     {
-        Debug.Log(t1 + "-------------" + t2);
         return ((t1.transform.position - t2.transform.position).magnitude <= transform.localScale.x + 0.05f);
     }
 
@@ -167,8 +166,6 @@ public class Grid : MonoBehaviour
     {
         if(t1.IsMovable() && t2.IsMovable())
         {
-            /*trashes[(int)t1.X, (int)t1.Y] = t2;
-            trashes[(int)t2.X, (int)t2.Y] = t1;*/
 
             float t1X = t1.X;
             float t1Y = t1.Y;
@@ -180,7 +177,6 @@ public class Grid : MonoBehaviour
 
     public void PressTrash(GameTrash t)
     {
-        Debug.Log(t.X + "::::::" + t.Y);
         if (!pressedTrash)
         {
             pressedTrash = t;
@@ -199,12 +195,4 @@ public class Grid : MonoBehaviour
         previousTrash = t;
     }
 
-    public void ReleaseTrash()
-    {
-        if(IsAdjacent(pressedTrash, previousTrash))
-        {
-
-            SwapPieces(pressedTrash, previousTrash);
-        }
-    }
 }
