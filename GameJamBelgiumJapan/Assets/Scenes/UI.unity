@@ -254,7 +254,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   timer_text: {fileID: 1939963319}
-  time_: 300
+  time_: 20
 --- !u!114 &370444174
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -404,7 +404,7 @@ MonoBehaviour:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 432732340}
-  m_Enabled: 1
+  m_Enabled: 0
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 14b784a67b3f99c4fa6958ff57cea2f3, type: 3}
   m_Name: 

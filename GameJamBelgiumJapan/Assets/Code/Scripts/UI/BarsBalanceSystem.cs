@@ -51,7 +51,7 @@ public class BarsBalanceSystem : MonoBehaviour
 
     IEnumerator AddElemental(int j)
     {
-        for (int i = 0; i < 5.0f; i++)
+        for (int i = 0; i < 5; i++)
         {
             bars[j].value += 2.0f;
             yield return new WaitForSeconds(0.05f);
