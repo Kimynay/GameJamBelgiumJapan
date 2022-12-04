@@ -13,6 +13,7 @@ GameObject:
   - component: {fileID: 7582618118251195485}
   - component: {fileID: 3385608366786471542}
   - component: {fileID: 687453770189042999}
+  - component: {fileID: 6189279248569779639}
   m_Layer: 0
   m_Name: Hex_prefab
   m_TagString: Untagged
@@ -47,7 +48,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 15736d43fdf679f44aacb703e882c6b6, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  renderer: {fileID: 7228081833618356246}
 --- !u!114 &7582618118251195485
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -116,6 +116,18 @@ PolygonCollider2D:
       - {x: -0.016544342, y: -0.5042343}
       - {x: 0.4344498, y: -0.26041293}
       - {x: 0.43544102, y: 0.25923342}
+--- !u!114 &6189279248569779639
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2307246327380643702}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: d2508aa0198a4a84eb5f28aa03e9297e, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!1 &9044752447497766403
 GameObject:
   m_ObjectHideFlags: 0

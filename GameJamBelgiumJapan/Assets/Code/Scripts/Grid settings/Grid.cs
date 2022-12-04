@@ -2,6 +2,7 @@ using System;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using System.Linq;
 
 public class Grid : MonoBehaviour
 {
@@ -32,7 +33,7 @@ public class Grid : MonoBehaviour
     private GameTrash[,] trashes;
 
     private GameTrash pressedTrash;
-    private GameTrash previousTrash;
+    private Collider2D[] neighbourCells = new Collider2D[7];
 
     void Start()
     {
@@ -78,10 +79,17 @@ public class Grid : MonoBehaviour
 
     public IEnumerator Fill()
     {
-        while (FillStep())
+        bool needsRefill = true;
+
+        while (needsRefill)
         {
             yield return new WaitForSeconds(fillTime);
+            while (FillStep())
+            {
+                yield return new WaitForSeconds(fillTime);
+            }
         }
+        needsRefill = ClearAllValidMatches();
     }
 
     public bool FillStep()
@@ -166,12 +174,19 @@ public class Grid : MonoBehaviour
     {
         if(t1.IsMovable() && t2.IsMovable())
         {
+            //if (GetMatch(t1) != null || GetMatch(t2) != null)
+            //{
+                
+                float t1X = t1.X;
+                float t1Y = t1.Y;
 
-            float t1X = t1.X;
-            float t1Y = t1.Y;
+                t1.MovableComponent.Move(t2.X, t2.Y, fillTime);
+                t2.MovableComponent.Move(t1X, t1Y, fillTime);
 
-            t1.MovableComponent.Move(t2.X, t2.Y, fillTime);
-            t2.MovableComponent.Move(t1X, t1Y, fillTime);
+                //ClearAllValidMatches();
+
+            StartCoroutine(Fill());
+            //}
         }
     }
 
@@ -190,9 +205,85 @@ public class Grid : MonoBehaviour
         }
         pressedTrash = t;
     }
-    public void EnterTrash(GameTrash t)
+
+    public List<GameTrash> GetMatch(GameTrash t)
     {
-        previousTrash = t;
+        if (t.IsElemental())
+        {
+            ElementalTrash.ElementalType element = t.ElementalComponent.Element;
+            List<GameTrash> matchingTrashes = new List<GameTrash>();
+            Queue<GameTrash> queue = new Queue<GameTrash>();
+            HashSet<GameTrash> visited = new HashSet<GameTrash>();
+
+            queue.Enqueue(t);
+            matchingTrashes.Add(t);
+            while (queue.Count > 0)
+            {
+                t = queue.Dequeue();
+                if (!visited.Contains(t))
+                {
+                    visited.Add(t);
+                    neighbourCells = Physics2D.OverlapCircleAll(t.transform.position, transform.localScale.x + 0.05f);
+                    GameTrash tr;
+                    foreach (Collider2D col in neighbourCells.Where(c => c != null))
+                    {
+                        tr = col.GetComponent<GameTrash>();
+                        if (!tr)
+                            continue;
+                        if (tr.IsElemental() && tr.ElementalComponent.Element == element && !visited.Contains(tr))
+                        {
+                            queue.Enqueue(tr);
+                            matchingTrashes.Add(tr);
+                        }
+                    }
+                }
+            }  
+
+            if(matchingTrashes.Count >= 3)
+            {
+                return matchingTrashes;
+            }
+        }
+        return null;
+    }
+
+    public bool ClearAllValidMatches()
+    {
+        bool needsReffil = false;
+        for(int y = 0; y < yDim; y++)
+        {
+            for(int x = 0; x < xDim; x++)
+            {
+                if(trashes[x, y].IsClearable())
+                {
+                    List<GameTrash> match = GetMatch(trashes[x, y]);
+                    if(match != null)
+                    {
+                        for(int i = 0; i < match.Count; i++)
+                        {
+                            float offset = CalculateOffset(y);
+                            //!!!!!!!!!!!!!!!!!!!!!!!
+                            if(ClearTrash((int)match[i].X, (int)match[i].Y, offset))
+                            {
+                                needsReffil = true;
+                            }
+                        }
+                    }
+                }
+            }
+        }
+        return needsReffil;
+    }
+
+    public bool ClearTrash(int x, int y, float offset)
+    {
+        if (trashes[x, y].IsClearable() && !trashes[x, y].ClearableComponent.IsBeingCleared) 
+        {
+            trashes[x, y].ClearableComponent.Clear();
+            SpawnNewTrash(x, y, TrashType.EMPTY, offset);
+            return true;
+        }
+        return false;
     }
 
 }
