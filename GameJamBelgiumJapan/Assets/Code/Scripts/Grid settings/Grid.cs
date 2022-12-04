@@ -174,8 +174,12 @@ public class Grid : MonoBehaviour
     {
         if(t1.IsMovable() && t2.IsMovable())
         {
+            //change condition (work only if already a match before moving)
+            //condition if we only want to move the pieces if there is a match
             //if (GetMatch(t1) != null || GetMatch(t2) != null)
             //{
+            GetMatch(t1);
+            GetMatch(t2);
                 
                 float t1X = t1.X;
                 float t1Y = t1.Y;
@@ -241,6 +245,11 @@ public class Grid : MonoBehaviour
 
             if(matchingTrashes.Count >= 3)
             {
+                foreach (GameTrash mt in matchingTrashes)
+                {
+                    mt.transform.GetChild(0).GetComponent<SpriteRenderer>().color = Color.red;
+                }
+                Debug.Log("matching ok " + matchingTrashes.Count);
                 return matchingTrashes;
             }
         }
@@ -259,11 +268,11 @@ public class Grid : MonoBehaviour
                     List<GameTrash> match = GetMatch(trashes[x, y]);
                     if(match != null)
                     {
-                        for(int i = 0; i < match.Count; i++)
+                        foreach(GameTrash m in match)
                         {
                             float offset = CalculateOffset(y);
                             //!!!!!!!!!!!!!!!!!!!!!!!
-                            if(ClearTrash((int)match[i].X, (int)match[i].Y, offset))
+                            if(ClearTrash((int)m.Y, (int)m.X, offset))
                             {
                                 needsReffil = true;
                             }
