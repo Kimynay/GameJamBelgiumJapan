@@ -20,6 +20,7 @@ public class Grid : MonoBehaviour
         public TrashType type;
         public GameObject prefab;
     };
+    private int nbrTileSpawned = 0;
 
     public int xDim = 5;
     public int yDim = 5;
@@ -35,12 +36,19 @@ public class Grid : MonoBehaviour
     private GameTrash pressedTrash;
     private Collider2D[] neighbourCells = new Collider2D[7];
 
+    void Awake()
+    {
+        GameManager.gameManager.grid = this;
+    }
     void Start()
     {
-
+        //set scale of the grid to the prefab
         trashPrefabs[1].prefab.transform.localScale = transform.localScale;
 
+        //Initialise trashPrefabDict
         trashPrefabDict = new Dictionary<TrashType, GameObject>();
+
+
         for (int i = 0; i < trashPrefabs.Length; i++)
         {
             if (!trashPrefabDict.ContainsKey(trashPrefabs[i].type))
@@ -49,24 +57,13 @@ public class Grid : MonoBehaviour
             }
         }
 
-        /*for (int x = 0; x < xDim; x++)
-        {
-            for (int y = 0; y < yDim; y++)
-            {
-                float offset = CalculateOffset(y);
-
-                GameObject background = Instantiate(backgroundPrefab, GetWorldPosition(x + offset, y * 0.866f), Quaternion.identity);
-                background.transform.parent = transform;
-            }
-        }*/
-
         trashes = new GameTrash[xDim, yDim];
         for (int x = 0; x < xDim; x++)
         {
             for (int y = 0; y < yDim; y++)
             {
                 float offset = CalculateOffset(y);
-                SpawnNewTrash(x, y, TrashType.EMPTY, offset);
+                SpawnNewTrash(x, y, x, y, TrashType.EMPTY, offset);
             }
         }
         StartCoroutine(Fill());
@@ -79,6 +76,7 @@ public class Grid : MonoBehaviour
 
     public IEnumerator Fill()
     {
+        Debug.Log("Clear ?");
         bool needsRefill = true;
 
         while (needsRefill)
@@ -88,8 +86,10 @@ public class Grid : MonoBehaviour
             {
                 yield return new WaitForSeconds(fillTime);
             }
+            needsRefill = ClearAllValidMatches();
         }
-        needsRefill = ClearAllValidMatches();
+
+
     }
 
     public bool FillStep()
@@ -103,13 +103,15 @@ public class Grid : MonoBehaviour
                 if (trash.IsMovable())
                 {
                     GameTrash trashBelow = trashes[x, y + 1];
+                    trashes[x, y].name = x.ToString() + ":" + y.ToString();
                     if(trashBelow.Type == TrashType.EMPTY)
                     {
                         Destroy(trashBelow.gameObject);
                         float offset = CalculateOffset(y);
                         trash.MovableComponent.Move((x + offset)* transform.localScale.x, ((y + 1) * 0.866f)* transform.localScale.x, fillTime);
                         trashes[x, y + 1] = trash;
-                        SpawnNewTrash(x, y, TrashType.EMPTY, offset);
+                        trashes[x, y + 1].Y += 1;
+                        SpawnNewTrash(x, y, x, y, TrashType.EMPTY, offset);
                         movedTrash = true;
                     }
                 }
@@ -119,21 +121,28 @@ public class Grid : MonoBehaviour
         for(int x = 0; x < xDim; x++)
         {
             GameTrash trashBelow = trashes[x, 0];
-            if(trashBelow.Type == TrashType.EMPTY)
+            if (trashBelow.Type == TrashType.EMPTY)
             {
                 Destroy(trashBelow.gameObject);
                 float offset = CalculateOffset(-1);
                 GameObject newTrash = Instantiate(trashPrefabDict[TrashType.NORMAL], Vector3.zero, Quaternion.identity);
                 newTrash.transform.parent = transform;
+                newTrash.transform.position = GetWorldPosition((xDim / 2.0f) * transform.localScale.x, -(2.0f * 0.866f) * transform.localScale.x);
 
                 trashes[x, 0] = newTrash.GetComponent<GameTrash>();
-                trashes[x, 0].Init(x, -1, this, TrashType.NORMAL);
+                trashes[x, 0].Init(x, -1, x, -1, this, TrashType.NORMAL);
+                //Move the element
                 trashes[x, 0].MovableComponent.Move((x + offset) * transform.localScale.x, (0 * 0.866f) * transform.localScale.x, fillTime);
+                trashes[x, 0].Y += 1;
+                //choix random de l'élément
                 trashes[x, 0].ElementalComponent.SetElement((ElementalTrash.ElementalType)UnityEngine.Random.Range(0, trashes[x, 0].ElementalComponent.NumElements));
                 movedTrash = true;
             }
-        }
+            else
+            {
 
+            }
+        }
         return movedTrash;
     }
 
@@ -143,15 +152,16 @@ public class Grid : MonoBehaviour
         return new Vector2(transform.position.x - (xDim * transform.localScale.x) / 2.0f + x, transform.position.y + (yDim * transform.localScale.x) / 3.0f - y);
     }
 
-    public GameTrash SpawnNewTrash(int x, int y, TrashType type, float offset)
+    public GameTrash SpawnNewTrash(int X, int Y, float x, float y, TrashType type, float offset)
     {
         GameObject newTrash = Instantiate(trashPrefabDict[type], GetWorldPosition(x + offset, y * 0.866f), Quaternion.identity);
+        newTrash.name = "Hexa " + nbrTileSpawned++;
         newTrash.transform.parent = transform;
 
-        trashes[x, y] = newTrash.GetComponent<GameTrash>();
-        trashes[x, y].Init(x, y, this, type);
+        trashes[X, Y] = newTrash.GetComponent<GameTrash>();
+        trashes[X, Y].Init(X, Y, x, y, this, type);
 
-        return trashes[x, y];
+        return trashes[X, Y];
     }
 
     private float CalculateOffset(int y)
@@ -165,32 +175,26 @@ public class Grid : MonoBehaviour
         return offset;
     }
 
-    public bool IsAdjacent(GameTrash t1, GameTrash t2)
-    {
-        return ((t1.transform.position - t2.transform.position).magnitude <= transform.localScale.x + 0.05f);
-    }
-
     public void SwapPieces(GameTrash t1, GameTrash t2)
     {
         if(t1.IsMovable() && t2.IsMovable())
         {
-            //change condition (work only if already a match before moving)
-            //condition if we only want to move the pieces if there is a match
-            //if (GetMatch(t1) != null || GetMatch(t2) != null)
-            //{
-            GetMatch(t1);
-            GetMatch(t2);
-                
-                float t1X = t1.X;
-                float t1Y = t1.Y;
+            float t1X = t1.x;
+            float t1Y = t1.y;
+            int grid1X = t1.X;
+            int grid1Y = t1.Y;
 
-                t1.MovableComponent.Move(t2.X, t2.Y, fillTime);
-                t2.MovableComponent.Move(t1X, t1Y, fillTime);
+            t1.MovableComponent.Move(t2.x, t2.y, fillTime);
+            trashes[t1.X, t1.Y] = t2;
+            t1.X = t2.X;
+            t1.Y = t2.Y;
 
-                //ClearAllValidMatches();
+            t2.MovableComponent.Move(t1X, t1Y, fillTime);
+            trashes[t1.X, t1.Y] = t1;
+            t2.X = grid1X;
+            t2.Y = grid1Y;
 
             StartCoroutine(Fill());
-            //}
         }
     }
 
@@ -208,6 +212,10 @@ public class Grid : MonoBehaviour
             return;
         }
         pressedTrash = t;
+    }
+    public bool IsAdjacent(GameTrash t1, GameTrash t2)
+    {
+        return ((t1.transform.position - t2.transform.position).magnitude <= transform.localScale.x + 0.05f);
     }
 
     public List<GameTrash> GetMatch(GameTrash t)
@@ -245,11 +253,6 @@ public class Grid : MonoBehaviour
 
             if(matchingTrashes.Count >= 3)
             {
-                foreach (GameTrash mt in matchingTrashes)
-                {
-                    mt.transform.GetChild(0).GetComponent<SpriteRenderer>().color = Color.red;
-                }
-                Debug.Log("matching ok " + matchingTrashes.Count);
                 return matchingTrashes;
             }
         }
@@ -258,41 +261,43 @@ public class Grid : MonoBehaviour
 
     public bool ClearAllValidMatches()
     {
-        bool needsReffil = false;
+        Debug.Log("Clear ?");
+        bool needsRefill = false;
         for(int y = 0; y < yDim; y++)
         {
-            for(int x = 0; x < xDim; x++)
+           
+            for (int x = 0; x < xDim; x++)
             {
-                if(trashes[x, y].IsClearable())
+                if (trashes[x, y] != null)
                 {
                     List<GameTrash> match = GetMatch(trashes[x, y]);
-                    if(match != null)
+                    if (match != null)
                     {
                         foreach(GameTrash m in match)
                         {
                             float offset = CalculateOffset(y);
-                            //!!!!!!!!!!!!!!!!!!!!!!!
-                            if(ClearTrash((int)m.Y, (int)m.X, offset))
+                            if (ClearTrash(m, x, y, offset))
                             {
-                                needsReffil = true;
+                                needsRefill = true;
                             }
                         }
                     }
                 }
             }
         }
-        return needsReffil;
+        return needsRefill;
     }
 
-    public bool ClearTrash(int x, int y, float offset)
+    public bool ClearTrash(GameTrash m, int x, int y, float offset)
     {
-        if (trashes[x, y].IsClearable() && !trashes[x, y].ClearableComponent.IsBeingCleared) 
+        if (m.IsClearable() && !m.ClearableComponent.IsBeingCleared) 
         {
-            trashes[x, y].ClearableComponent.Clear();
-            SpawnNewTrash(x, y, TrashType.EMPTY, offset);
+            int xInList = m.X;
+            int yInList = m.Y;
+            m.ClearableComponent.Clear();
+            SpawnNewTrash(xInList, yInList, x, y, TrashType.EMPTY, offset);
             return true;
         }
         return false;
     }
-
 }

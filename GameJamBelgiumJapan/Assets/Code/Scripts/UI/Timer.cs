@@ -11,6 +11,10 @@ public class Timer : MonoBehaviour
     public float time_;
     public static float time;
 
+    void Awake()
+    {
+        GameManager.gameManager.timer = this;
+    }
     // Start is called before the first frame update
     void Start()
     {
@@ -18,15 +22,12 @@ public class Timer : MonoBehaviour
     }
 
     // Update is called once per frame
-    void FixedUpdate()
+    void Update()
     {
-        if (UIManager.timer)
-        {
-            timer_text.text = $"{(int)time / 60:00}:{(int)time % 60:00}";
-            time -= Time.deltaTime;
+        timer_text.text = $"{(int)time / 60:00}:{(int)time % 60:00}";
+        time -= Time.deltaTime;
 
-            if (time <= 0) time = 0;
-        }
+        if (time <= 0) time = 0;
     }
 
     public void Initialization()

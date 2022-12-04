@@ -7,7 +7,7 @@ public class MenuManager : MonoBehaviour
 {
     public bool returnToMenu = false;
     public GameObject Canvas;
-    private void OnEnable()
+    private void Awake()
     {
         DontDestroyOnLoad(gameObject);
     }

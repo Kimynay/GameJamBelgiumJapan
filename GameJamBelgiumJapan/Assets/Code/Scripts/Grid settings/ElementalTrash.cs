@@ -9,10 +9,13 @@ public class ElementalTrash : MonoBehaviour
     {
         FIRE_CIGARET,
         FIRE_GASOIL,
+        FIRE_GASOIL2,
         WATER_BEER,
         WATER_BOTTLE,
+        WATER_BOTTLE2,
         EARTH_BANANA,
         EARTH_GARBAGE,
+        EARTH_GARBAGE2,
         ANY,
         COUNT,
     }

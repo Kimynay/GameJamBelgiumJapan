@@ -5,30 +5,54 @@ using UnityEngine;
 public class GameTrash : MonoBehaviour
 {
 
-    private float x;
-    private float y;
+    private int xGridPos;
+    private int yGridPos;
+    private float xRealPos;
+    private float yRealPos;
 
-    public float X
+    public int X
     {
-        get { return x; }
+        get { return xGridPos; }
         set { if (IsMovable())
             {
-                x = value;
+                xGridPos = value;
             } }
     }
-    public float Y
+    public int Y
     {
-        get { return y; }
+        get { return yGridPos; }
         set
         {
             if (IsMovable())
             {
-                y = value;
+                yGridPos = value;
+            }
+        }
+    }
+    public float x
+    {
+        get { return xRealPos; }
+        set
+        {
+            if (IsMovable())
+            {
+                xRealPos = value;
+            }
+        }
+    }
+    public float y
+    {
+        get { return yRealPos; }
+        set
+        {
+            if (IsMovable())
+            {
+                yRealPos = value;
             }
         }
     }
 
-    private Grid.TrashType type;
+    public Grid.TrashType type;
     public Grid.TrashType Type
     {
         get { return type; }
@@ -62,6 +86,7 @@ public class GameTrash : MonoBehaviour
     {
         movableComponent = GetComponent<MovableTrash>();
         elementalComponent = GetComponent<ElementalTrash>();
+        //Debug.Log("Clear ?" + gameObject + Time.time);
         clearableComponent = GetComponent<ClearableTrash>();
     }
 
@@ -75,10 +100,12 @@ public class GameTrash : MonoBehaviour
         
     }
 
-    public void Init(int _x, int _y, Grid _grid, Grid.TrashType _type)
+    public void Init(int _X, int _Y, float _x, float _y, Grid _grid, Grid.TrashType _type)
     {
-        x = _x;
-        y = _y;
+        xGridPos = _X;
+        yGridPos = _Y;
+        xRealPos = _x;
+        yRealPos = _y;
         grid = _grid;
         type = _type;
     }

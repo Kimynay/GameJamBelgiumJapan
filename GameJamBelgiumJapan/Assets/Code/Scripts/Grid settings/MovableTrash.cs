@@ -13,16 +13,6 @@ public class MovableTrash : MonoBehaviour
         trash = GetComponent<GameTrash>();
     }
 
-    void Start()
-    {
-        
-    }
-
-    void Update()
-    {
-        
-    }
-
     public void Move(float newX, float newY, float time)
     {
 
@@ -37,8 +27,8 @@ public class MovableTrash : MonoBehaviour
     private IEnumerator MoveCoroutine(float newX, float newY, float time)
     {
 
-        trash.X = newX;
-        trash.Y = newY;
+        trash.x = newX;
+        trash.y = newY;
 
         Vector3 startPos = transform.position;
         Vector3 endPos = trash.GridRef.GetWorldPosition(newX, newY);

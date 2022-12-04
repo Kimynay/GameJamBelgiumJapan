@@ -1,4 +1,4 @@
-using System.Collections;
+ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
@@ -12,6 +12,13 @@ public class BarsBalanceSystem : MonoBehaviour
     public Slider[] bars;
 
     public float width;
+
+    public float increasePerTile = 1.0f;
+
+    void Awake()
+    {
+        GameManager.gameManager.barsBalanceSystem = this;
+    }
     // Start is called before the first frame update
     void Start()
     {
@@ -29,10 +36,7 @@ public class BarsBalanceSystem : MonoBehaviour
     // Update is called once per frame
     void FixedUpdate()
     {
-        if (UIManager.bars_balance_system)
-        {
-            foreach (Slider i in bars) i.value -= Time.deltaTime * 5.0f;
-        }
+        foreach (Slider i in bars) i.value -= Time.deltaTime * 1.0f;
 
         condition_value = Mathf.Abs(bars[0].value - 60) + Mathf.Abs(bars[1].value - 60) + Mathf.Abs(bars[2].value - 60);
     }
@@ -42,7 +46,7 @@ public class BarsBalanceSystem : MonoBehaviour
         foreach (Slider i in bars) i.value = 60;
     }
 
-    public void OnPushButton(int i)
+    public void IncreaseElement(int i)
     {
         StartCoroutine("AddElemental", i);
     }
@@ -51,7 +55,7 @@ public class BarsBalanceSystem : MonoBehaviour
     {
         for (int i = 0; i < 5; i++)
         {
-            bars[j].value += 2.0f;
+            bars[j].value += increasePerTile / 5.0f;
             yield return new WaitForSeconds(0.05f);
         }
     }
