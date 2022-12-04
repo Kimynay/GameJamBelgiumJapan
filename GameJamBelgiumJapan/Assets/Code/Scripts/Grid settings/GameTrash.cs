@@ -52,10 +52,17 @@ public class GameTrash : MonoBehaviour
         get { return elementalComponent; }
     }
 
+    private ClearableTrash clearableComponent;
+    public ClearableTrash ClearableComponent
+    {
+        get { return clearableComponent; }
+    }
+
     void Awake()
     {
         movableComponent = GetComponent<MovableTrash>();
         elementalComponent = GetComponent<ElementalTrash>();
+        clearableComponent = GetComponent<ClearableTrash>();
     }
 
     void Start()
@@ -76,6 +83,11 @@ public class GameTrash : MonoBehaviour
         type = _type;
     }
 
+    private void OnMouseDown()
+    {
+        grid.PressTrash(this);
+    }
+
     public bool IsMovable()
     {
         return movableComponent != null;
@@ -84,5 +96,10 @@ public class GameTrash : MonoBehaviour
     public bool IsElemental()
     {
         return elementalComponent != null;
+    }
+
+    public bool IsClearable()
+    {
+        return clearableComponent != null;
     }
 }
