@@ -10,39 +10,60 @@ public class EarthHealth : MonoBehaviour
 
     public enum State
     {
+        Singing,
         Good,
+        Interested,
+        Concerned,
         Bad,
-        Worst,
+        Low,
+        Critical,
     }
 
     public State state = State.Bad;
 
-    // Start is called before the first frame update
+    void Awake()
+    {
+        GameManager.gameManager.earthHealth = this;
+    }
     void Start()
     {
         
     }
-
-    // Update is called once per frame
     void Update()
     {
         switch (state)
         {
-            case State.Worst:
-                image.sprite = sprites[0];
+            case State.Singing:
+                image.sprite = sprites[6];
                 break;
-
+            case State.Good:
+                image.sprite = sprites[5];
+                break;
+            case State.Interested:
+                image.sprite = sprites[4];
+                break;
+            case State.Concerned:
+                image.sprite = sprites[3];
+                break;
             case State.Bad:
+                image.sprite = sprites[2];
+                break;
+            case State.Low:
                 image.sprite = sprites[1];
                 break;
-                
-            case State.Good:
-                image.sprite = sprites[2];
+            case State.Critical:
+                image.sprite = sprites[0];
+                break;
+            default:
                 break;
         }
 
-        if (BarsBalanceSystem.condition_value <= 50) state = State.Good;
-        else if (BarsBalanceSystem.condition_value <= 100) state = State.Bad;
-        else state = State.Worst;
+        if (BarsBalanceSystem.condition_value <= (100f / 7f)) state = State.Singing;
+        else if (BarsBalanceSystem.condition_value <= (100f / 7f) * 2f) state = State.Good;
+        else if (BarsBalanceSystem.condition_value <= (100f / 7f) * 3f) state = State.Interested;
+        else if (BarsBalanceSystem.condition_value <= (100f / 7f) * 4f) state = State.Concerned;
+        else if (BarsBalanceSystem.condition_value <= (100f / 7f) * 5f) state = State.Bad;
+        else if (BarsBalanceSystem.condition_value <= (100f / 7f) * 6f) state = State.Low;
+        else state = State.Critical;
     }
 }

@@ -8,6 +8,8 @@ public class GameManager : MonoBehaviour
     public Timer timer;
     public BarsBalanceSystem barsBalanceSystem;
     public Grid grid;
+    public EarthHealth earthHealth;
+    public CharacterEmotions characterEmotions;
     private void Awake()
     {
         gameManager = this;

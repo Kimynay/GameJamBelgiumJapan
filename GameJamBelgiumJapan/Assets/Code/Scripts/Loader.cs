@@ -5,15 +5,20 @@ using UnityEngine.SceneManagement;
 
 public class Loader : MonoBehaviour
 {
+    public float LoadingTime = 2.0f;
     public GameObject menuManager;
-    void Start()
+    void Awake()
     {
-        menuManager.SetActive(true);
         DontDestroyOnLoad(menuManager);
-        SceneManager.LoadScene(1);
     }
-    void Update()
+    private void Start()
     {
-        
+        StartCoroutine(Load());
+    }
+    public IEnumerator Load()
+    {
+        yield return new WaitForSeconds(LoadingTime);
+        menuManager.SetActive(true);
+        SceneManager.LoadScene(1);
     }
 }

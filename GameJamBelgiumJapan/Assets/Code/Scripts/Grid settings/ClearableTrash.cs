@@ -31,7 +31,7 @@ public class ClearableTrash : MonoBehaviour
     public void Clear()
     {
         isBeingCleared = true;
-        Debug.Log((int)gameObject.GetComponent<ElementalTrash>().Element / 3);
+        //Debug.Log((int)gameObject.GetComponent<ElementalTrash>().Element / 3);
         GameManager.gameManager.barsBalanceSystem.IncreaseElement((int)gameObject.GetComponent<ElementalTrash>().Element / 3);
         Destroy(gameObject);
     }

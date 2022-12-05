@@ -27,7 +27,18 @@ public class Timer : MonoBehaviour
         timer_text.text = $"{(int)time / 60:00}:{(int)time % 60:00}";
         time -= Time.deltaTime;
 
-        if (time <= 0) time = 0;
+        if (time <= 0)
+        {
+            time = 0;
+            if((int)GameManager.gameManager.earthHealth.state > 1)
+            {
+                MenuManager.menuManager.LooseGame();
+            }
+            else
+            {
+                MenuManager.menuManager.WinGame();
+            }
+        }
     }
 
     public void Initialization()

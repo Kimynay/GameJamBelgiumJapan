@@ -261,7 +261,6 @@ public class Grid : MonoBehaviour
 
     public bool ClearAllValidMatches()
     {
-        Debug.Log("Clear ?");
         bool needsRefill = false;
         for(int y = 0; y < yDim; y++)
         {
