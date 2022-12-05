@@ -32,7 +32,15 @@ public class ClearableTrash : MonoBehaviour
     {
         isBeingCleared = true;
         //Debug.Log((int)gameObject.GetComponent<ElementalTrash>().Element / 3);
-        GameManager.gameManager.barsBalanceSystem.IncreaseElement((int)gameObject.GetComponent<ElementalTrash>().Element / 3);
+        int element = (int)gameObject.GetComponent<ElementalTrash>().Element;
+        if(element < 6)
+        {
+            GameManager.gameManager.barsBalanceSystem.IncreaseElement(element / 2);
+        }
+        else
+        {
+            MenuManager.menuManager.pokedexManager.creatures[element - 6].collected = true;
+        }
         Destroy(gameObject);
     }
 }

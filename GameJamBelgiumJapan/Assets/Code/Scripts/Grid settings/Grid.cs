@@ -20,6 +20,8 @@ public class Grid : MonoBehaviour
         public TrashType type;
         public GameObject prefab;
     };
+    public GameObject tileSound;
+
     private int nbrTileSpawned = 0;
 
     public int xDim = 5;
@@ -36,12 +38,15 @@ public class Grid : MonoBehaviour
     private GameTrash pressedTrash;
     private Collider2D[] neighbourCells = new Collider2D[7];
 
+    GameSE game_se;
+
     void Awake()
     {
         GameManager.gameManager.grid = this;
     }
     void Start()
     {
+        game_se = GameObject.Find("GameSE").GetComponent<GameSE>();
         //set scale of the grid to the prefab
         trashPrefabs[1].prefab.transform.localScale = transform.localScale;
 
@@ -71,7 +76,7 @@ public class Grid : MonoBehaviour
 
     void Update()
     {
-        
+
     }
 
     public IEnumerator Fill()
@@ -135,7 +140,15 @@ public class Grid : MonoBehaviour
                 trashes[x, 0].MovableComponent.Move((x + offset) * transform.localScale.x, (0 * 0.866f) * transform.localScale.x, fillTime);
                 trashes[x, 0].Y += 1;
                 //choix random de l'élément
-                trashes[x, 0].ElementalComponent.SetElement((ElementalTrash.ElementalType)UnityEngine.Random.Range(0, trashes[x, 0].ElementalComponent.NumElements));
+                float randomIndex = 0;
+                float random = UnityEngine.Random.Range(0f, 7f);
+                if (random < 6)
+                    randomIndex = random;
+                else
+                    randomIndex = ((random - 6) * 6) + 6;
+                int index = (int)randomIndex;
+                //int random = UnityEngine.Random.Range(0, trashes[x, 0].ElementalComponent.NumElements);
+                trashes[x, 0].ElementalComponent.SetElement((ElementalTrash.ElementalType)index);
                 movedTrash = true;
             }
             else
@@ -272,7 +285,11 @@ public class Grid : MonoBehaviour
                     List<GameTrash> match = GetMatch(trashes[x, y]);
                     if (match != null)
                     {
-                        foreach(GameTrash m in match)
+                        GameObject sound = Instantiate(tileSound, transform.position, Quaternion.identity);
+                        sound.GetComponent<AudioSource>().volume = MenuManager.menuManager.VolumeSlider.value;
+                        sound.GetComponent<AudioSource>().Play();
+                        Destroy(sound, 3.0f);
+                        foreach (GameTrash m in match)
                         {
                             float offset = CalculateOffset(y);
                             if (ClearTrash(m, x, y, offset))
@@ -293,6 +310,7 @@ public class Grid : MonoBehaviour
         {
             int xInList = m.X;
             int yInList = m.Y;
+            game_se.Up();
             m.ClearableComponent.Clear();
             SpawnNewTrash(xInList, yInList, x, y, TrashType.EMPTY, offset);
             return true;

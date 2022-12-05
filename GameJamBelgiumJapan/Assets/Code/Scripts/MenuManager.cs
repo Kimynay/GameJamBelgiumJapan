@@ -2,6 +2,7 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.SceneManagement;
+using UnityEngine.UI;
 
 public class MenuManager : MonoBehaviour
 {
@@ -11,6 +12,9 @@ public class MenuManager : MonoBehaviour
     public GameObject winMenu;
     public GameObject looseMenu;
     public GameObject menuBackGRound;
+    public PokedexManager pokedexManager;
+    public Slider VolumeSlider;
+    public Camera mainCamera;
 
     private void Awake()
     {
@@ -19,6 +23,11 @@ public class MenuManager : MonoBehaviour
     }
     void Update()
     {
+        if(mainCamera == null)
+        {
+            mainCamera = Camera.main;
+        }
+        mainCamera.gameObject.GetComponent<AudioSource>().volume = VolumeSlider.value;
 
     }
     public void PlayGame ()
