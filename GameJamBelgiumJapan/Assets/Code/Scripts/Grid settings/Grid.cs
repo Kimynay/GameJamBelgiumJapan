@@ -36,12 +36,15 @@ public class Grid : MonoBehaviour
     private GameTrash pressedTrash;
     private Collider2D[] neighbourCells = new Collider2D[7];
 
+    GameSE game_se;
+
     void Awake()
     {
         GameManager.gameManager.grid = this;
     }
     void Start()
     {
+        game_se = GameObject.Find("GameSE").GetComponent<GameSE>();
         //set scale of the grid to the prefab
         trashPrefabs[1].prefab.transform.localScale = transform.localScale;
 
@@ -293,6 +296,7 @@ public class Grid : MonoBehaviour
         {
             int xInList = m.X;
             int yInList = m.Y;
+            game_se.Up();
             m.ClearableComponent.Clear();
             SpawnNewTrash(xInList, yInList, x, y, TrashType.EMPTY, offset);
             return true;

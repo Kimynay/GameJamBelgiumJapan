@@ -1229,7 +1229,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   audioSource: {fileID: 1316438625}
-  UpAudioClip: {fileID: 8300000, guid: df89034851ce0564c89b1e983081e48e, type: 3}
+  UpAudioClip: {fileID: 8300000, guid: 6a1f7ffb36792ab4baf62c42fdc499f0, type: 3}
   DownAudioClip: {fileID: 8300000, guid: 95481a3179b3a2c4784e8d5f0ff11142, type: 3}
   ClearClip: {fileID: 8300000, guid: e0117fa26c1adb34fb6a4847cb55d9e7, type: 3}
   GameOverClip: {fileID: 8300000, guid: 87816b02288c9cc459182951ee4e1ac7, type: 3}
@@ -1421,7 +1421,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!224 &1467090067
 RectTransform:
   m_ObjectHideFlags: 0
